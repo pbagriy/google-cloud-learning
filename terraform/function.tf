@@ -11,9 +11,8 @@ resource "google_cloudfunctions_function" "function" {
   environment_variables = { "PUBSUB_TOPIC" : google_pubsub_topic.data-topic.name }
 
   source_repository {
-    url = "https://source.cloud.google.com/${var.PROJECT_NAME}/github_pbagriy_google-cloud-learning/+/main:cloud-function/"
+    url = "https://source.developers.google.com/projects/${var.PROJECT_NAME}/repos/github_pbagriy_google-cloud-learning/moveable-aliases/main/paths/cloud-function/"
   }
-
 }
 
 # IAM entry for all users to invoke the function

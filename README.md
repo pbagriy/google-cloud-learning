@@ -17,6 +17,7 @@ Terraform doesn't support mirroring, and we need it if we want to automate thing
 Maybe I'll consider just uploading to storage via `gsutil`, but for now I'm trying to make this work.
 
 Steps:
+- Enable API https://console.cloud.google.com/apis/api/sourcerepo.googleapis.com/overview
 - Go to https://source.cloud.google.com/
 - Click `Add Repository`
 - Click `Connect external repository`
