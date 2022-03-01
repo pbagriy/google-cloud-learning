@@ -7,7 +7,6 @@ terraform {
   }
 
   backend "gcs" {
-    bucket = "${var.PROJECT_NAME}-tf-state"
     prefix = "terraform/state"
   }
 }
@@ -20,6 +19,7 @@ provider "google" {
 
 resource "google_project_service" "gcp_services" {
   for_each = toset([
+    "cloudbuild.googleapis.com",
     "cloudfunctions.googleapis.com",
     "dataflow.googleapis.com"
   ])
