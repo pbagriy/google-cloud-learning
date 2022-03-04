@@ -13,6 +13,8 @@ resource "google_cloudfunctions_function" "function" {
   source_repository {
     url = "https://source.developers.google.com/projects/${var.PROJECT_NAME}/repos/github_pbagriy_google-cloud-learning/moveable-aliases/main/paths/cloud-function/"
   }
+
+  depends_on = [google_project_service.gcp_services]
 }
 
 # IAM entry for all users to invoke the function
