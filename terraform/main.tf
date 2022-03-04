@@ -13,8 +13,8 @@ terraform {
 
 provider "google" {
   project = var.PROJECT_NAME
-  region  = "europe-west1"
-  zone    = "europe-west1-b"
+  region  = "us-central1"
+  zone    = "us-central1-b"
 }
 
 resource "google_project_service" "gcp_services" {
@@ -27,9 +27,9 @@ resource "google_project_service" "gcp_services" {
 }
 
 
-resource "google_storage_bucket" "static-site" {
+resource "google_storage_bucket" "project-data-bucket" {
   name          = "${var.PROJECT_NAME}-data"
-  location      = "EUROPE-WEST1"
+  location      = "US-CENTRAL1"
   force_destroy = true
 
   uniform_bucket_level_access = true
