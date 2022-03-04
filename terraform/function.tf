@@ -8,7 +8,7 @@ resource "google_cloudfunctions_function" "function" {
 
   trigger_http = true
 
-  environment_variables = { "PUBSUB_TOPIC" : google_pubsub_topic.data-topic.name }
+  environment_variables = { "PUBSUB_TOPIC" : google_pubsub_topic.data-topic.id }
 
   source_repository {
     url = "https://source.developers.google.com/projects/${var.PROJECT_NAME}/repos/github_pbagriy_google-cloud-learning/moveable-aliases/main/paths/cloud-function/"
