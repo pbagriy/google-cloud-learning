@@ -37,6 +37,11 @@
             <artifactId>google-cloud-pubsub</artifactId>
             <version>1.115.5</version>
         </dependency>
+        <dependency>
+            <groupId>de.heikoseeberger</groupId>
+            <artifactId>akka-http-play-json_2.13</artifactId>
+            <version>1.39.2</version>
+        </dependency>
     </dependencies>
 
     <build>
