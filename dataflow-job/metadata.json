@@ -1,0 +1,14 @@
+{
+  "name": "PubSubToBigQuery",
+  "description": "read from pubsub and push to bigquery",
+  "parameters": [
+    {
+      "name": "inputSubscription",
+      "label": "GCS input pubsub subscription"
+    },
+    {
+      "name": "outputTable",
+      "label": "GCS output bigquery table"
+    }
+  ]
+}
