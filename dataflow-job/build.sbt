@@ -3,10 +3,7 @@ import Keys._
 import com.typesafe.sbt.packager.docker._
 
 import scala.sys.process._
-import complete.DefaultParsers._
-
 import scala.language.postfixOps
-
 
 val scioVersion = "0.11.5"
 val beamVersion = "2.36.0"
@@ -36,8 +33,7 @@ resolvers += "confluent" at "https://packages.confluent.io/maven/"
 
 lazy val gcpProject = settingKey[String]("GCP Project")
 lazy val gcpRegion = settingKey[String]("GCP region")
-lazy val createFlextTemplate = inputKey[Unit]("create DataflowFlexTemplate")
-lazy val runFlextTemplate = inputKey[Unit]("run DataflowFlexTemplate")
+lazy val createFlexTemplate = inputKey[Unit]("create DataflowFlexTemplate")
 
 enablePlugins(JavaAppPackaging)
 
@@ -49,19 +45,19 @@ gcpRegion := "us-central1"
 assembly / test := {}
 assembly / assemblyJarName := "PubSubToBigQuery.jar"
 assembly / assemblyMergeStrategy ~= { old =>
-{
-  case s if s.endsWith(".properties") => MergeStrategy.filterDistinctLines
-  case s if s.endsWith("public-suffix-list.txt") =>
-    MergeStrategy.filterDistinctLines
-  case s if s.endsWith(".class") => MergeStrategy.last
-  case s if s.endsWith(".proto") => MergeStrategy.last
-  case s if s.endsWith("reflection-config.json") => MergeStrategy.rename
-  case s if s.endsWith("config.fmpp") => MergeStrategy.discard
-  case s                         => old(s)
-}
+  {
+    case s if s.endsWith(".properties") => MergeStrategy.filterDistinctLines
+    case s if s.endsWith("public-suffix-list.txt") =>
+      MergeStrategy.filterDistinctLines
+    case s if s.endsWith(".class")                 => MergeStrategy.last
+    case s if s.endsWith(".proto")                 => MergeStrategy.last
+    case s if s.endsWith("reflection-config.json") => MergeStrategy.rename
+    case s if s.endsWith("config.fmpp")            => MergeStrategy.discard
+    case s                                         => old(s)
+  }
 }
 
-Docker / packageName := s"gcr.io/${gcpProject.value}/dataflow/templates/PubSubToBigQuery"
+Docker / packageName := s"${gcpRegion.value}-docker.pkg.dev/${gcpProject.value}/dataflow/pubsub-to-bigquery"
 Docker / dockerCommands := Seq(
   Cmd(
     "FROM",
@@ -79,32 +75,32 @@ Docker / dockerCommands := Seq(
   ),
   ExecCmd(
     "COPY",
-    s"1/opt/docker/lib/${(assembly / assemblyJarName).value}",
+    (assembly / assemblyJarName).value,
     "${FLEX_TEMPLATE_JAVA_CLASSPATH}"
   )
 )
 
 Universal / mappings := {
   val fatJar = (Compile / assembly).value
-  val filtered = (Universal / mappings).value.filter {
-    case (_, name) => !name.endsWith(".jar")
+  val filtered = (Universal / mappings).value.filter { case (_, name) =>
+    !name.endsWith(".jar")
   }
   filtered :+ (fatJar -> s"lib/${fatJar.getName}")
 }
 scriptClasspath := Seq((assembly / assemblyJarName).value)
 
-createFlextTemplate := {
-  val _ = (Docker / publish).value
-  s"""gcloud beta dataflow DataflowFlexTemplate build
-          gs://${gcpProject.value}/dataflow/templates/${name.value}.json
+createFlexTemplate := {
+  copyfile.value
+  (Docker / publish).value
+  s"""gcloud dataflow flex-template build
+          gs://${gcpProject.value}-configs/dataflow/templates/${name.value}.json
           --image ${dockerAlias.value}
           --sdk-language JAVA
           --metadata-file metadata.json""" !
 }
-runFlextTemplate := {
-  val parameters = spaceDelimited("<arg>").parsed
-  s"""gcloud beta dataflow DataflowFlexTemplate run ${name.value}
-    	--template-file-gcs-location gs://${gcpProject.value}/dataflow/templates/${name.value}.json
-    	--region=${gcpRegion.value}
-    	--parameters ${parameters.mkString(",")}""" !
+//todo confirm that it actually works as intended
+lazy val copyfile = taskKey[Unit]("copy jar file to docker folder")
+
+copyfile := {
+  s"""cp target/scala-2.13/${(assembly / assemblyJarName).value} target/docker/stage"""
 }

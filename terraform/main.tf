@@ -17,6 +17,12 @@ provider "google" {
   zone    = "${var.LOCATION}-b"
 }
 
+provider "google-beta" {
+  project = var.PROJECT_NAME
+  region  = var.LOCATION
+  zone    = "${var.LOCATION}-b"
+}
+
 resource "google_project_service" "gcp_services" {
   for_each = toset([
     "cloudbuild.googleapis.com",

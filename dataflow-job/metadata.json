@@ -4,11 +4,13 @@
   "parameters": [
     {
       "name": "inputSubscription",
-      "label": "GCS input pubsub subscription"
+      "label": "GCS input pubsub subscription",
+      "helpText": "isn't it obvious?"
     },
     {
       "name": "outputTable",
-      "label": "GCS output bigquery table"
+      "label": "GCS output bigquery table",
+      "helpText": "isn't it obvious?"
     }
   ]
 }
