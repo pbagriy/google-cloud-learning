@@ -1,0 +1,37 @@
+steps:
+  - id: 'create bucket'
+    name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: 'gcloud'
+    args: [ 'gsutil', 'mb',
+            '-l', 'us-central1',
+            'gs://$TF_VAR_CONFIG_BUCKET']
+  - id: 'enable versioning'
+    name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: 'gcloud'
+    args: [ 'gsutil', 'versioning',
+            'set', 'on',
+            'gs://$TF_VAR_CONFIG_BUCKET']
+  - id: 'tf init'
+    name: 'hashicorp/terraform:1.0.0'
+    entrypoint: 'sh'
+    args:
+      - '-c'
+      - |
+          cd terraform
+          terraform init -backend-config="bucket=$TF_VAR_CONFIG_BUCKET"
+  - id: 'tf plan'
+    name: 'hashicorp/terraform:1.0.0'
+    entrypoint: 'sh'
+    args:
+      - '-c'
+      - |
+          cd terraform
+          terraform plan
+  - id: 'tf apply'
+    name: 'hashicorp/terraform:1.0.0'
+    entrypoint: 'sh'
+    args:
+      - '-c'
+      - |
+          cd terraform
+          terraform apply -auto-approve
