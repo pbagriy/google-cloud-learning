@@ -39,8 +39,23 @@ gsutil mb -l us-central1 gs://$TF_VAR_CONFIG_BUCKET
 gsutil versioning set on gs://$TF_VAR_CONFIG_BUCKET
 ```
 
-### Initiate terraform with partial config
+### Initiate terraform with partial config (clone project first, will add command later, right now you can copy it in source repository)
 
 `terraform init -backend-config="bucket=$TF_VAR_CONFIG_BUCKET"`
 
 Add `-reconfigure` if for some reason first init failed
+
+### TODO plans for the future (when I have time). PRs and suggestions are welcome of course.
+
+- investigate why playground is being forcibly shutdown and if it can be fixed (dataflow is likely culprit, either
+  because of compute resources or because of streaming inserts into bigQuery, I'd say latter is more likely. so maybe
+  job rewrite will be enough, otherwise look if we can reduce assigned resources, we don't need much to begin with)
+- generate more interesting data, so we can experiment with writing more sophisticated queries in BigQuery
+- investigate if we can optimize cloud function, right now it's pretty slow when writing many messages
+- Investigate how to better write pom.xml for cloud functions, maven sucks and sbt doesn't generate completely correct
+  file, so further manual modifications are required right now. At the very least write script to semi-manually add
+  required plugin in the final file
+- investigate if it's possible to simplify or at least partially automate connecting to GitHub repository
+- validate cloud build configuration on real project, playground doesn't give enough permissions to access source
+  repository from cloud build
+- Maybe write script to do all initial manual cli steps at once, obviously can't include those that require UI
