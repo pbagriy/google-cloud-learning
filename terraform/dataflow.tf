@@ -17,4 +17,6 @@ resource "null_resource" "build_template" {
     command = "sbt createFlexTemplate"
     working_dir = "../dataflow-job"
   }
+
+  depends_on = [google_artifact_registry_repository.docker-registry]
 }

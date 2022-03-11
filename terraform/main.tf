@@ -27,7 +27,8 @@ resource "google_project_service" "gcp_services" {
   for_each = toset([
     "cloudbuild.googleapis.com",
     "cloudfunctions.googleapis.com",
-    "dataflow.googleapis.com"
+    "dataflow.googleapis.com",
+    "artifactregistry.googleapis.com"
   ])
   service = each.key
 }
