@@ -4,11 +4,13 @@ Project to learn about and practice using various resources in Google Cloud
 
 ## Set up project in playground
 
-Most of the setup is done (or will be done once I get there) by cloud build and terraform, but some initial manual setup
-is required in order for it to work correctly.
+Most of the setup is done (or will be done once I get there) by cloud build (playground doesn't allow a great deal of
+power when it comes to cloud build) and terraform, but some initial manual setup is required in order for it to work
+correctly.
 
 All resources are currently created in us-central1 region, because playground only allows to choose europe-west1 and
-functions cannot be created there due to a bug with builder.
+functions cannot be created there due to a bug with builder. In real project you can change this by setting
+TF_VAR_LOCATION to your desired region, but make sure that all resources are supported in that region.
 
 ### Manually connect this project to cloud source repository
 
@@ -36,11 +38,6 @@ Steps:
 gsutil mb -l us-central1 gs://$TF_VAR_CONFIG_BUCKET
 gsutil versioning set on gs://$TF_VAR_CONFIG_BUCKET
 ```
-
-### Publish dataflow template (temporary, will be replaced with cloud build)
-
-- `sdk install sbt`
-- `sbt "runMain dataflow.PubSubToBigQuery --project=$GOOGLE_CLOUD_PROJECT --runner=DataflowRunner --region=us-central1 --stagingLocation=gs://$TF_VAR_CONFIG_BUCKET/staging --templateLocation=gs://$TF_VAR_CONFIG_BUCKET/templates/PubSubToBigQuery"`
 
 ### Initiate terraform with partial config
 

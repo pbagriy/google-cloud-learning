@@ -98,9 +98,9 @@ createFlexTemplate := {
           --sdk-language JAVA
           --metadata-file metadata.json""" !
 }
-//todo confirm that it actually works as intended
+
 lazy val copyfile = taskKey[Unit]("copy jar file to docker folder")
 
 copyfile := {
-  s"""cp target/scala-2.13/${(assembly / assemblyJarName).value} target/docker/stage"""
+  s"""cp target/scala-2.13/${(assembly / assemblyJarName).value} target/docker/stage""" !
 }

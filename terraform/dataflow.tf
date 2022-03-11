@@ -14,9 +14,13 @@ resource "google_dataflow_flex_template_job" "pubsub_to_bigquery" {
 resource "null_resource" "build_template" {
 
   provisioner "local-exec" {
+    command = "sdk install sbt"
+  }
+
+  provisioner "local-exec" {
     command = "sbt createFlexTemplate"
     working_dir = "../dataflow-job"
   }
 
-  depends_on = [google_artifact_registry_repository.docker-registry]
+  depends_on = [null_resource.authorize_docker]
 }
